@@ -11,14 +11,14 @@ pub extern "C" fn _start() -> ! {
     exit(ret)
 }
 
-fn main() -> i8 {
+fn main() -> u8 {
     print("Hello World\n");
     0
 }
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    exit(-16)
+    exit(1)
 }
 
 fn print(message: &str) -> i32 {
@@ -39,7 +39,7 @@ fn print(message: &str) -> i32 {
 }
 
 // https://git.musl-libc.org/cgit/musl/tree/src/exit/_Exit.c
-fn exit(code: i8) -> ! {
+fn exit(code: u8) -> ! {
     loop {
         unsafe {
             asm!(

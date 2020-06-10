@@ -7,4 +7,10 @@ https://users.rust-lang.org/t/lets-build-a-standard-library-std-free-of-c-code-d
 
 rusl: https://github.com/anp/rusl
 
+How to build non_std
+
 https://os.phil-opp.com/freestanding-rust-binary/
+https://fasterthanli.me/blog/2020/a-no-std-rust-binary/
+
+Searchable list of syscalls: https://filippo.io/linux-syscall-table/
+

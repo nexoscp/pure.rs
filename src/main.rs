@@ -1,27 +1,29 @@
 #![no_std]
 #![no_main]
 #![feature(asm)]
-
+mod exit;
 use core::panic::PanicInfo;
+use crate::exit::{ExitCode, OK, exit};
 
-#[no_mangle] // don't mangle the name of this function
+#[no_mangle]
 pub extern "C" fn _start() -> ! {
-    //loop {}
-    let ret = main();
-    exit(ret)
+    match main() {
+        Ok(_) => exit(OK),
+        Err(c) => exit(c)
+    }
 }
 
-fn main() -> u8 {
-    print("Hello World\n");
-    0
+fn main() -> Result<(), ExitCode> {
+    print("Hello World\n")?;
+    Ok(())
 }
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    exit(1)
+    exit(ExitCode::new(1))
 }
 
-fn print(message: &str) -> i32 {
+fn print(message: &str) -> Result<i32, ()> {
     let ret: i32;
     unsafe {
         asm!(
@@ -35,20 +37,6 @@ fn print(message: &str) -> i32 {
             lateout("rax") ret,
         );
     }
-    ret
+    Ok(ret)
 }
 
-// https://git.musl-libc.org/cgit/musl/tree/src/exit/_Exit.c
-fn exit(code: u8) -> ! {
-    loop {
-        unsafe {
-            asm!(
-            "syscall",
-            in("rax") 60, // syscall number
-            in("rdi") code as i32,
-            out("rcx") _, // clobbered by syscalls
-            out("r11") _, // clobbered by syscalls
-            );
-        }
-    }
-}

@@ -18,11 +18,11 @@ pub fn exit(code: ExitCode) -> ! {
     loop {
         unsafe {
             asm!(
-            "syscall",
-            in("rax") 60, // syscall number
-            in("rdi") code.0 as i32,
-            out("rcx") _, // clobbered by syscalls
-            out("r11") _, // clobbered by syscalls
+                "syscall",
+                in("rax") 60, // syscall number
+                in("rdi") code.0 as i32,
+                out("rcx") _, // clobbered by syscalls
+                out("r11") _, // clobbered by syscalls
             );
         }
     }
